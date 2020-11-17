@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { User } from './_models/user';
+import { AccountService } from './_services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -9,17 +11,22 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   title = 'Dating App';
   users: any; //for now
-  constructor(private http: HttpClient) { }
+  constructor(private accountService: AccountService) { }
 
   ngOnInit() {
-    this.getUsers();
+    this.setCurrentUser()
   }
 
-  getUsers() {
-    this.http.get('https://localhost:5001/api/users').subscribe(response => {
-      this.users = response;
-    }, error => {
-      console.log(error)
-    })
+  setCurrentUser() {
+    const user: User = JSON.parse(localStorage.getItem('user')!); //https://stackoverflow.com/questions/46915002/argument-of-type-string-null-is-not-assignable-to-parameter-of-type-string
+    this.accountService.setCurrentUser(user);
   }
+
+  // getUsers() {
+  //   this.http.get('https://localhost:5001/api/users').subscribe(response => {
+  //     this.users = response;
+  //   }, error => {
+  //     console.log(error)
+  //   })
+  // }
 }
