@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -21,6 +21,8 @@ import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     TestErrorsComponent,
     NotFoundComponent,
     ServerErrorComponent,
-    MemberCardComponent
+    MemberCardComponent,
+    MemberEditComponent,
   ],
   imports: [
     BrowserModule,
@@ -44,12 +47,14 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     BrowserAnimationsModule,
     FormsModule,
 
-    SharedModule //extra libraries
+    SharedModule, //extra libraries
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, //multi is to add our interceptor. If multi was false we would override Angular interceptors
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true } //multi is to add our interceptor. If multi was false we would override Angular interceptors
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }, //multi is to add our interceptor. If multi was false we would override Angular interceptors
+    { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true }, //multi is to add our interceptor. If multi was false we would override Angular interceptors
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {}
