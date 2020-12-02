@@ -13,7 +13,7 @@ import { MemberService } from 'src/app/_services/member.service';
   styleUrls: ['./member-edit.component.css'],
 })
 export class MemberEditComponent implements OnInit {
-  @ViewChild('editForm') editForm!: NgForm;
+  @ViewChild('editForm') editForm: NgForm;
 
   //Avoid user to leave the tab/browser with unsaved changes and without confirmation
   @HostListener('window:beforeunload', ['$event']) unloadNotification(
@@ -24,8 +24,8 @@ export class MemberEditComponent implements OnInit {
     }
   }
 
-  member!: Member;
-  user!: User;
+  member: Member;
+  user: User;
 
   constructor(
     private accountService: AccountService,

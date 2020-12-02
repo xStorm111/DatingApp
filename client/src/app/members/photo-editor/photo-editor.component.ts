@@ -14,11 +14,11 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./photo-editor.component.css'],
 })
 export class PhotoEditorComponent implements OnInit {
-  @Input() member!: Member;
-  uploader!: FileUploader;
+  @Input() member: Member;
+  uploader: FileUploader;
   hasBaseDropZoneOver = false;
   baseUrl = environment.apiUrl;
-  user!: User;
+  user: User;
 
   constructor(
     private accountService: AccountService,

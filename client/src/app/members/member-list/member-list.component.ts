@@ -9,7 +9,7 @@ import { MemberService } from 'src/app/_services/member.service';
   styleUrls: ['./member-list.component.css'],
 })
 export class MemberListComponent implements OnInit {
-  members$!: Observable<Member[]>;
+  members$: Observable<Member[]>;
   constructor(private memberService: MemberService) {}
 
   ngOnInit(): void {
