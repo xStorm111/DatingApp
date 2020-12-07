@@ -37,7 +37,7 @@ export class MemberService {
     this.userParams = params;
   }
 
-  resetUserParams(){
+  resetUserParams() {
     this.userParams = new UserParams(this.user);
     return this.userParams;
   }
@@ -121,6 +121,19 @@ export class MemberService {
       );
   }
 
+  addLike(username: string) {
+    return this.http.post(this.baseUrl + 'likes/' + username, {});
+  }
+
+  getLikes(predicate: string, pageNumber, pageSize) {
+    // liked/likedBy
+    let params = this.getPaginationHeaders(pageNumber, pageSize);
+    params = params.append('predicate', predicate);
+    return this.getPaginatedResult<Partial<Member[]>>(
+      this.baseUrl + 'likes',
+      params
+    );
+  }
   private getPaginationHeaders(pageNumber: number, pageSize: number) {
     let params = new HttpParams();
     params = params.append('pageNumber', pageNumber.toString());
