@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -35,11 +37,30 @@ namespace API.Data
             .SingleOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+        public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
-            return await _context.Users
-            .ProjectTo<MemberDto>(_mapper.ConfigurationProvider) //get the properties we want directly from query
-            .ToListAsync();
+
+            var query = _context.Users.AsQueryable();
+
+            query = query.Where(u => u.UserName != userParams.CurrentUsername);
+            query = query.Where(u => u.Gender == userParams.Gender);
+
+            var minDoB = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+            var maxDoB = DateTime.Today.AddYears(-userParams.MinAge - 1);
+
+            query = query.Where(u => u.DateOfBirth >= minDoB && u.DateOfBirth <= maxDoB);
+            query = userParams.orderBy switch
+            { //since c# v8
+                "createdAt" => query.OrderByDescending(u => u.CreatedAt),
+                _ => query.OrderByDescending(u => u.LastActive) //_ is default
+            };
+
+            //Since we now will only read from this, we don't need to track this on EntityFramework
+            return await PagedList<MemberDto>.CreateAsync(
+                query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).AsNoTracking(),
+                userParams.PageNumber,
+                userParams.pageSize
+                );
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)
