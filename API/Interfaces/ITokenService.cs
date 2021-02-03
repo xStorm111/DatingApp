@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using API.Entities;
 
 namespace API.Interfaces
@@ -10,6 +11,6 @@ namespace API.Interfaces
     public interface ITokenService
     {
         //In this case, the method CreateToken on TokenService will receive an AppUser and return a string.
-        string CreateToken(AppUser user); //we can test token on jwt.io
+        Task<string> CreateToken(AppUser user); //we can test token on jwt.io
     }
 }
